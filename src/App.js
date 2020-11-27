@@ -1,14 +1,19 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import "./list.json";
 import Word from "./Word";
 
 let words = require("./list.json");
-console.log(words);
+
 
 class App extends React.Component {
-  state = { stage: 1 };
+  state = {
+    stage: 1,
+    actualWord: words[1],
+    displayWord: null,
+    guessedLetters: [],
+  };
+
   render() {
     return (
       <div className="App">
@@ -26,18 +31,63 @@ class App extends React.Component {
           >
             Click
           </button>
-          <Word word={words[0]} />
+
+          <Word word={this.state.actualWord} displayWord={this.state.displayWord} />
         </header>
       </div>
     );
   }
 
+  componentDidMount() {
+    document.addEventListener('keydown', (event) => {
+
+      if (/[A-Za-z]/.test(event.key) && event.key.length === 1) {
+        this.updateGuessedLetters(event.key)
+        this.checkGuess(event.key)
+      }
+
+    })
+  }
+
+  updateGuessedLetters = (guess) => {
+    this.setState((currState) => {
+      const newStrArr = [];
+      for (let letter of currState.actualWord) {
+        if (currState.guessedLetters.includes(letter)) {
+          newStrArr.push(letter)
+        } else {
+          newStrArr.push("_")
+        }
+      }
+
+      return {
+        guessedLetters: [guess, ...currState.guessedLetters],
+        displayWord: newStrArr.join("")
+      }
+    })
+  }
+
+  checkGuess = (guess) => {
+    console.log(guess);
+    if (this.state.actualWord.includes(guess)) {
+      // something
+    } else {
+      this.increaseStage();
+    }
+  }
+
   increaseStage = () => {
     this.setState((currentState) => {
-      return { stage: currentState.stage + 1 };
+
+
+      return {
+        stage: currentState.stage + 1
+      };
     });
-    console.log(this.state);
+
   };
+
+
 }
 
 export default App;
