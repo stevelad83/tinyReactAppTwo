@@ -1,25 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import "./list.json";
+import Word from "./Word";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+let words = require("./list.json");
+console.log(words);
+
+class App extends React.Component {
+  state = { stage: 1 };
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img
+            src={`./images/stage${this.state.stage}.jpg`}
+            className="stage"
+            alt={`stage${this.state.stage}`}
+          />
+
+          <button
+            onClick={() => {
+              this.increaseStage();
+            }}
+          >
+            Click
+          </button>
+          <Word word={words[0]} />
+        </header>
+      </div>
+    );
+  }
+
+  increaseStage = () => {
+    this.setState((currentState) => {
+      return { stage: currentState.stage + 1 };
+    });
+    console.log(this.state);
+  };
 }
 
 export default App;
